@@ -15,21 +15,3 @@ spec:
     path: "/mnt/data/mysql"
 ```
 
-**WHAT is PV:**
-- Storage resource in cluster
-- Independent of pod lifecycle
-- Can be NFS, AWS EBS, Azure Disk, etc.
-
-**WHY PV:**
-- ✅ Data persists even if pod dies
-- ✅ Database data not lost on restart
-- ✅ Can move between nodes
-
-**COMMON ERROR:**
-```
-Error: PersistentVolume is not available
-CAUSE: Path /mnt/data/mysql doesn't exist on node
-FIX:
-ssh into node:
-  sudo mkdir -p /mnt/data/mysql
-  sudo chmod 777 /mnt/data/mysql
