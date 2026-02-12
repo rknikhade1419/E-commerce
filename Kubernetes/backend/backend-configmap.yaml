@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: ecommerce
+  labels:
+    app: backend
+    tier: application
+data:
+  # Application Configuration
+  SERVER_PORT: "8080"
+  SPRING_PROFILES_ACTIVE: "production"
+  
+  # Database Configuration - NON-SENSITIVE
+  DB_HOST: "mysql-service"  # ← CRITICAL: K8s Service DNS name
+  DB_PORT: "3306"
+  DB_NAME: "ecommerce"
+  
+  # JPA Configuration
+  JPA_HIBERNATE_DDL_AUTO: "update"
+  JPA_SHOW_SQL: "false"
+  
+  # Logging
+  LOGGING_LEVEL: "INFO"
+```
+
+**WHAT is happening here:**
+```
+Backend Pod needs to connect to MySQL Pod
+↓
+Backend uses environment variable: DB_HOST=mysql-service
+↓
+Kubernetes DNS resolves: mysql-service → MySQL Pod IP
+↓
+Connection established: backend → mysql-service:3306 → MySQL Pod
+```
+
+**WHY use Service name instead of Pod IP:**
+- ❌ Pod IP changes when pod restarts
+- ✅ Service DNS name stays constant
+- ✅ Load balancing if multiple DB replicas
+- ✅ Service discovery built-in
+
+**HOW Kubernetes DNS works:**
+```
+Service Name Format:
+<service-name>.<namespace>.svc.cluster.local
+
+Examples:
+mysql-service.ecommerce.svc.cluster.local  (Full)
+mysql-service.ecommerce                     (Short - same namespace)
+mysql-service                               (Shortest - same namespace)
