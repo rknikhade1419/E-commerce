@@ -35,18 +35,3 @@ Kubernetes DNS resolves: mysql-service → MySQL Pod IP
 Connection established: backend → mysql-service:3306 → MySQL Pod
 ```
 
-**WHY use Service name instead of Pod IP:**
-- ❌ Pod IP changes when pod restarts
-- ✅ Service DNS name stays constant
-- ✅ Load balancing if multiple DB replicas
-- ✅ Service discovery built-in
-
-**HOW Kubernetes DNS works:**
-```
-Service Name Format:
-<service-name>.<namespace>.svc.cluster.local
-
-Examples:
-mysql-service.ecommerce.svc.cluster.local  (Full)
-mysql-service.ecommerce                     (Short - same namespace)
-mysql-service                               (Shortest - same namespace)
