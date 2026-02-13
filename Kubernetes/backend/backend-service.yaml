@@ -22,27 +22,3 @@ spec:
       timeoutSeconds: 3600  # 1 hour session
 ```
 
-**Port Mapping Explained:**
-```
-External Client → Service Port 80 → Target Port 8080 (Container)
-
-Example:
-curl http://backend-service.ecommerce.svc.cluster.local:80/api/products
-       ↓
-Routes to one of:
-  backend-pod-1:8080
-  backend-pod-2:8080
-  backend-pod-3:8080
-```
-
-**Session Affinity:**
-```
-WITHOUT sessionAffinity:
-Request 1 → Pod-1
-Request 2 → Pod-2  (Different pod - session lost!)
-Request 3 → Pod-3
-
-WITH sessionAffinity=ClientIP:
-Request 1 from Client-A → Pod-1
-Request 2 from Client-A → Pod-1  (Same pod - session maintained!)
-Request 3 from Client-A → Pod-1
