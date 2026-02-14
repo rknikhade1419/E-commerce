@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        // Docker Hub Details (Updated for Roshan)
+        // Docker Hub Details
         DOCKER_HUB_CREDENTIALS = 'dockerhub-creds'
         DOCKER_HUB_USER = 'rknikhade1419'
         
@@ -11,12 +11,12 @@ pipeline {
         IMAGE_NAME = "${DOCKER_HUB_USER}/${APP_NAME}"
         IMAGE_TAG = "${BUILD_NUMBER}"
         
-        // Kubernetes Details
+        // Kubernetes Details (Renamed to k8s)
         K8S_NAMESPACE = 'ecommerce'
         K8S_DEPLOYMENT = 'backend'
         
-        // Paths
-        BACKEND_DIR = 'backend'
+        // Folder Paths from your project structure
+        BACKEND_DIR = 'ecommerce-app/Backend'
         K8S_DIR = 'k8s'
     }
     
@@ -26,21 +26,15 @@ pipeline {
     }
     
     stages {
-    
         stage('Git Checkout') {
             steps {
-                script {
-                
-                    echo "STAGE 1: Checking out code from Git"
-                }
-                // Updated with your repository URL
+                script { echo "STAGE 1: Checking out code" }
                 git branch: 'main', url: 'https://github.com/rknikhade1419/E-commerce.git'
             }
         }
         
         stage('Maven Build') {
             steps {
-            
                 dir("${BACKEND_DIR}") {
                     sh 'mvn clean compile'
                 }
@@ -48,24 +42,18 @@ pipeline {
         }
         
         stage('Unit Tests') {
-            steps 
-
+            steps {
                 dir("${BACKEND_DIR}") {
                     sh 'mvn test'
                 }
-            
             }
-        
             post {
-                always {
-                    junit "${BACKEND_DIR}/target/surefire-reports/*.xml"
-                }
+                always { junit "${BACKEND_DIR}/target/surefire-reports/*.xml" }
             }
         }
         
         stage('SonarQube Analysis') {
             steps {
-            
                 dir("${BACKEND_DIR}") {
                     withSonarQubeEnv('sonar-scanner') {
                         sh "mvn sonar:sonar -Dsonar.projectKey=${APP_NAME} -Dsonar.projectName=${APP_NAME}"
@@ -76,28 +64,23 @@ pipeline {
         
         stage('OWASP Dependency Check') {
             steps {
-            
                 dir("${BACKEND_DIR}") {
                     dependencyCheck additionalArguments: "--scan ./ --format HTML --project ${APP_NAME}", odcInstallation: 'OWASP-DC'
                     dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
                 }
-            
             }
         }
         
         stage('Package Application') {
             steps {
-            
                 dir("${BACKEND_DIR}") {
                     sh 'mvn clean package -DskipTests'
                 }
-            
             }
         }
         
         stage('Build Docker Image') {
             steps {
-            
                 dir("${BACKEND_DIR}") {
                     sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                     sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest"
@@ -107,7 +90,6 @@ pipeline {
         
         stage('Trivy Image Scan') {
             steps {
-                // Security scan of the newly built image
                 sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG} --format json --output trivy-report.json"
                 sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG}"
             }
@@ -126,9 +108,9 @@ pipeline {
         
         stage('Deploy Database') {
             steps {
-            
                 withKubeConfig([credentialsId: 'k8s-config']) {
                     sh "kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -"
+                    // Now using the updated k8s directory path
                     sh "kubectl apply -f ${K8S_DIR}/mysql/"
                     sh "kubectl wait --for=condition=ready pod -l app=mysql -n ${K8S_NAMESPACE} --timeout=300s"
                 }
@@ -137,9 +119,8 @@ pipeline {
         
         stage('Deploy Backend') {
             steps {
-            
                 withKubeConfig([credentialsId: 'k8s-config']) {
-                    // This command replaces the placeholder image in your manifest with the one we just built
+                    // Automatically updates the image in the deployment file within the k8s folder
                     sh "sed -i 's|image:.*|image: ${IMAGE_NAME}:${IMAGE_TAG}|g' ${K8S_DIR}/backend/backend-deployment.yaml"
                     sh "kubectl apply -f ${K8S_DIR}/backend/"
                     sh "kubectl wait --for=condition=ready pod -l app=backend -n ${K8S_NAMESPACE} --timeout=300s"
@@ -149,7 +130,6 @@ pipeline {
         
         stage('Verify Deployment') {
             steps {
-            
                 withKubeConfig([credentialsId: 'k8s-config']) {
                     sh "kubectl get pods -n ${K8S_NAMESPACE}"
                     sh "kubectl get svc -n ${K8S_NAMESPACE}"
@@ -159,7 +139,6 @@ pipeline {
         
         stage('Health Check') {
             steps {
-            
                 withKubeConfig([credentialsId: 'k8s-config']) {
                     sh "kubectl run health-check-pod --image=curlimages/curl:latest --rm -i --restart=Never -n ${K8S_NAMESPACE} -- curl -s http://backend-service/actuator/health"
                 }
@@ -168,7 +147,6 @@ pipeline {
     }
     
     post {
-    
         always {
             archiveArtifacts artifacts: '**/target/*.jar, **/trivy-report.json', allowEmptyArchive: true
             cleanWs()
