@@ -41,7 +41,8 @@ spec:
       
       containers:
       - name: backend
-        image: yourdockerhub/ecommerce-backend:latest
+        # Registry updated to your username
+        image: rknikhade1419/ecommerce-backend:latest
         imagePullPolicy: Always
         
         ports:
