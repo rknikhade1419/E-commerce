@@ -1,0 +1,136 @@
+
+{
+  "dashboard": {
+    "title": "E-Commerce Application Metrics",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Backend Pod Count",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "count(kube_pod_info{namespace=\"ecommerce\",pod=~\"backend.*\"})"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 6,
+          "h": 4
+        }
+      },
+      {
+        "id": 2,
+        "title": "HTTP Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count{namespace=\"ecommerce\"}[5m])"
+          }
+        ],
+        "gridPos": {
+          "x": 6,
+          "y": 0,
+          "w": 18,
+          "h": 8
+        }
+      },
+      {
+        "id": 3,
+        "title": "Memory Usage by Pod",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(container_memory_usage_bytes{namespace=\"ecommerce\",pod=~\"backend.*\"}) by (pod)"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 8,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "id": 4,
+        "title": "CPU Usage by Pod",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"ecommerce\",pod=~\"backend.*\"}[5m])) by (pod)"
+          }
+        ],
+        "gridPos": {
+          "x": 12,
+          "y": 8,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "id": 5,
+        "title": "Database Connections (Active)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "hikaricp_connections_active{namespace=\"ecommerce\"}"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 16,
+          "w": 6,
+          "h": 4
+        }
+      },
+      {
+        "id": 6,
+        "title": "Response Time (p95)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_server_requests_seconds_bucket{namespace=\"ecommerce\"}[5m]))"
+          }
+        ],
+        "gridPos": {
+          "x": 6,
+          "y": 16,
+          "w": 18,
+          "h": 8
+        }
+      },
+      {
+        "id": 7,
+        "title": "JVM Heap Memory",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{namespace=\"ecommerce\",area=\"heap\"}"
+          }
+        ],
+        "gridPos": {
+          "x": 0,
+          "y": 24,
+          "w": 12,
+          "h": 8
+        }
+      },
+      {
+        "id": 8,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(http_server_requests_seconds_count{namespace=\"ecommerce\",status=~\"5..\"}[5m])) / sum(rate(http_server_requests_seconds_count{namespace=\"ecommerce\"}[5m]))"
+          }
+        ],
+        "gridPos": {
+          "x": 12,
+          "y": 24,
+          "w": 12,
+          "h": 8
+        }
+      }
+    ]
+  }
+}
