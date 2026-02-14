@@ -22,16 +22,5 @@ data:
   
   # Logging
   LOGGING_LEVEL: "INFO"
-```
 
-**WHAT is happening here:**
-```
-Backend Pod needs to connect to MySQL Pod
-↓
-Backend uses environment variable: DB_HOST=mysql-service
-↓
-Kubernetes DNS resolves: mysql-service → MySQL Pod IP
-↓
-Connection established: backend → mysql-service:3306 → MySQL Pod
-```
 

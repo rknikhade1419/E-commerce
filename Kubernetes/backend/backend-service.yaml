@@ -20,5 +20,5 @@ spec:
   sessionAffinityConfig:
     clientIP:
       timeoutSeconds: 3600  # 1 hour session
-```
+
 
