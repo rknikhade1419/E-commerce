@@ -1,4 +1,4 @@
-E-Commerce Multi-Tier Application - Complete DevSecOps Implementation
+Scalable Microservices E-Commerce with Full Observability
 Show Image
 Show Image
 Show Image
@@ -153,7 +153,7 @@ bash- Helm 3.12+
 
 🚀 Quick Start
 1. Clone Repository
-bashgit clone https://github.com/yourusername/ecommerce-app.git
+bashgit clone https://github.com/rknikhade1419/E-commerce.git
 cd ecommerce-app
 2. Local Development (Docker Compose)
 bash# Start MySQL and Backend locally
