@@ -1,0 +1,95 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Package files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets & Credentials
+*.env
+*.key
+*.pem
+*.crt
+secrets/
+credentials/
+*-secret-local.yaml
+*-secret.yaml
+
+# Kubernetes configs
+kubeconfig
+*-kubeconfig.yaml
+
+# Docker
+.dockerignore
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+temp/
+tmp/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Build artifacts
+dist/
+build/
+
+# Test coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Application specific
+application-local.properties
+application-dev.properties
+docker-compose.override.yml
+
+# OWASP reports
+dependency-check-report.html
+dependency-check-report.xml
+
+# Trivy reports
+trivy-report.json
+
+# JaCoCo
+jacoco.exec
+
