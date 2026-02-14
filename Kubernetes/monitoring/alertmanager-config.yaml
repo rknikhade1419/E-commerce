@@ -44,3 +44,5 @@ stringData:
         channel: '#alerts'
         title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+        
