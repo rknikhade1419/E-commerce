@@ -1,4 +1,3 @@
-
 # E-Commerce Multi-Tier Application - Complete DevSecOps Implementation
 
 📋 **Table of Contents**
@@ -14,42 +13,25 @@
 * [Monitoring &amp; Logging](https://www.google.com/search?q=%23monitoring--logging)
 * [Troubleshooting](https://www.google.com/search?q=%23troubleshooting)
 * [Project Structure](https://www.google.com/search?q=%23project-structure)
-* [API Documentation](https://www.google.com/search?q=%23api-documentation)
-* [Contributing](https://www.google.com/search?q=%23contributing)
-* [License](https://www.google.com/search?q=%23license)
+* [Author](https://www.google.com/search?q=%23author)
 
 ---
 
 ## 🎯 Project Overview
 
-A production-ready, cloud-native e-commerce application demonstrating DevSecOps best practices with complete CI/CD automation, monitoring, and logging capabilities. This project showcases enterprise-level deployment patterns using Kubernetes orchestration, automated security scanning, and comprehensive observability.
+A production-ready, cloud-native e-commerce application demonstrating **DevSecOps** best practices. This project includes automated CI/CD, security scanning, and comprehensive observability.
 
 ### Business Use Case
 
-Multi-tier e-commerce platform with:
-
 * Product catalog management
 * User authentication & authorization
-* Shopping cart functionality
-* Order processing
-* Real-time inventory tracking
+* Shopping cart and order processing
 
 ---
 
 ## 🏗️ Architecture
 
 ### High-Level Architecture
-
-**Code snippet**
-
-```
-graph TD
-    Internet((Internet)) --> Ingress[Nginx Ingress Controller]
-    Ingress -- SSL/TLS Termination --> Backend[Backend API Pods - 3 Replicas]
-    Backend --> MySQL[(MySQL Database)]
-    Backend --> Monitoring[Prometheus & Grafana]
-    MySQL --> PV[Persistent Volume]
-```
 
 ### CI/CD Pipeline Flow
 
@@ -71,19 +53,6 @@ graph LR
 
 ---
 
-## 💻 Tech Stack
-
-| **Layer**         | **Technology**        | **Purpose**     |
-| ----------------------- | --------------------------- | --------------------- |
-| **Backend**       | Java 8 / Spring Boot 2.7.18 | Application Framework |
-| **Database**      | MySQL 8.0                   | Relational Database   |
-| **Orchestration** | Kubernetes 1.28+            | Container Management  |
-| **CI/CD**         | Jenkins 2.400+              | Automation Engine     |
-| **Security**      | SonarQube, OWASP, Trivy     | Code & Image Scanning |
-| **Observability** | Prometheus, Grafana, EFK    | Metrics & Logging     |
-
----
-
 ## 🚀 Quick Start
 
 ### 1. Clone Repository
@@ -100,10 +69,7 @@ cd E-commerce
 **Bash**
 
 ```
-# Start MySQL and Backend locally
 docker-compose up -d
-
-# Access application
 curl http://localhost:8080/api/products
 ```
 
@@ -116,10 +82,10 @@ curl http://localhost:8080/api/products
 **Bash**
 
 ```
-cd backend
+# Move to the backend source directory
+cd ecommerce-app/Backend
 mvn clean package -DskipTests
 docker build -t rknikhade1419/ecommerce-backend:1.0 .
-docker login
 docker push rknikhade1419/ecommerce-backend:1.0
 ```
 
@@ -138,30 +104,9 @@ kubectl create secret generic mysql-secret \
   --from-literal=password="REPLACE_WITH_YOUR_APP_PASS" \
   -n ecommerce
 
+# Apply manifests from the renamed k8s folder
 kubectl apply -f k8s/mysql/
 ```
-
----
-
-## 🔄 CI/CD Pipeline
-
-Your Jenkins pipeline is configured with  **13 stages** .
-
-### Jenkins Credentials Configuration
-
-| **Credential ID** | **Type**    | **Value**     |
-| ----------------------- | ----------------- | ------------------- |
-| `dockerhub-creds`     | Username/Password | rknikhade1419       |
-| `k8s-config`          | Secret File       | Your `kubeconfig` |
-| `sonarqube-token`     | Secret Text       | Your Sonar token    |
-
----
-
-## 🔧 Troubleshooting
-
-* **CrashLoopBackOff:** Check if the MySQL pod is ready using `kubectl get pods -n ecommerce`.
-* **ImagePullBackOff:** Verify the image `rknikhade1419/ecommerce-backend:1.0` exists on your Docker Hub.
-* **503 Service Unavailable:** Check if the Nginx Ingress Controller is running in the `ingress-nginx` namespace.
 
 ---
 
@@ -171,14 +116,15 @@ Your Jenkins pipeline is configured with  **13 stages** .
 
 ```
 E-commerce/
-├── backend/            # Spring Boot Source Code
-├── k8s/                # Kubernetes Manifests
-│   ├── mysql/          # DB Deployment
+├── Docker/             # Docker configuration
+├── ecommerce-app/      # Application Source
+│   └── Backend/        # Spring Boot API
+├── k8s/                # Kubernetes Manifests (Renamed from Kubernetes)
 │   ├── backend/        # App Deployment
+│   ├── logging/        # EFK Stack
 │   ├── monitoring/     # Prometheus & Grafana
-│   └── logging/        # EFK Stack
-├── Jenkinsfile         # Pipeline Definition
-└── docker-compose.yml  # Local Setup
+│   └── mysql/          # Database Deployment
+└── Scripts/            # Automation & Utility Scripts
 ```
 
 ---
