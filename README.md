@@ -1,7 +1,6 @@
 🛒 E-Commerce DevSecOps Platform
 This project is a production-grade, end-to-end DevSecOps implementation for a Java-based E-commerce platform. It leverages Infrastructure as Code (IaC), Automated CI/CD Pipelines, and a robust Observability Stack (Monitoring & Logging) deployed on Amazon EKS.
 
-
 🏗️ Architecture Overview
 The system is split into three distinct layers:
 
@@ -30,12 +29,10 @@ Database: MySQL 8.0
 
 Observability: Prometheus, Grafana (Monitoring), Elasticsearch, Fluentd, Kibana (Logging)
 
-
 📁 Project Structure
 
 **Plaintext**
 
-```
 E-commerce/
 ├── Docker/             # Docker configuration
 ├── ecommerce-app/      # Application Source
@@ -46,10 +43,6 @@ E-commerce/
 │   ├── monitoring/     # Prometheus & Grafana
 │   └── mysql/          # Database Deployment
 └── Scripts/            # Automation & Utility Scripts
-```
-
----
-
 
 🚀 Deployment Steps
 1. Provision the Tools Server
@@ -103,8 +96,6 @@ Non-Root Execution: Application runs as a restricted user within the container.
 Secret Management: Sensitive DB credentials are never hardcoded; managed via K8s Secrets.
 
 Init Containers: Ensures the application only starts when the database is verified as "Ready."
-
-
 
 👨‍💻 Author
 
