@@ -7,7 +7,7 @@ metadata:
     app: mysql
     tier: database
 spec:
-  replicas: 1  # Important: MySQL typically runs as single instance
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -57,29 +57,26 @@ spec:
           limits:
             memory: "1Gi"
             cpu: "1000m"
+        
+        # Liveness Probe: Checks if the process is running
         livenessProbe:
           exec:
-            command:
-            - mysqladmin
-            - ping
-            - -h
-            - localhost
+            command: ["mysqladmin", "ping", "-h", "localhost"]
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
+        
+        # Readiness Probe: Checks if we can actually query the DB
+        # FIXED: Wrapped in /bin/bash to allow variable expansion
         readinessProbe:
           exec:
             command:
-            - mysql
-            - -h
-            - localhost
-            - -u
-            - root
-            - -p${MYSQL_ROOT_PASSWORD}
-            - -e
-            - SELECT 1
+            - /bin/bash
+            - -c
+            - mysql -h localhost -u root -p"$MYSQL_ROOT_PASSWORD" -e "SELECT 1"
           initialDelaySeconds: 10
           periodSeconds: 5
+          
       volumes:
       - name: mysql-storage
         persistentVolumeClaim:
