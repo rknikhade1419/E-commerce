@@ -1,116 +1,37 @@
-# E-Commerce Multi-Tier Application - Complete DevSecOps Implementation
+E-Commerce DevSecOps Platform
+This project is a production-grade, end-to-end DevSecOps implementation for a Java-based E-commerce platform. It leverages Infrastructure as Code (IaC), Automated CI/CD Pipelines, and a robust Observability Stack (Monitoring & Logging) deployed on Amazon EKS.
 
-📋 **Table of Contents**
 
-* [Project Overview](https://www.google.com/search?q=%23project-overview)
-* [Architecture](https://www.google.com/search?q=%23architecture)
-* [Tech Stack](https://www.google.com/search?q=%23tech-stack)
-* [Features](https://www.google.com/search?q=%23features)
-* [Prerequisites](https://www.google.com/search?q=%23prerequisites)
-* [Quick Start](https://www.google.com/search?q=%23quick-start)
-* [Detailed Setup Guide](https://www.google.com/search?q=%23detailed-setup-guide)
-* [CI/CD Pipeline](https://www.google.com/search?q=%23cicd-pipeline)
-* [Monitoring &amp; Logging](https://www.google.com/search?q=%23monitoring--logging)
-* [Troubleshooting](https://www.google.com/search?q=%23troubleshooting)
-* [Project Structure](https://www.google.com/search?q=%23project-structure)
-* [Author](https://www.google.com/search?q=%23author)
+Architecture Overview
+The system is split into three distinct layers:
 
----
+Tools Infrastructure: A dedicated EC2 environment running Jenkins, SonarQube, and Nexus.
 
-## 🎯 Project Overview
+Cloud Infrastructure: A highly available AWS EKS cluster with managed node groups across multiple AZs.
 
-A production-ready, cloud-native e-commerce application demonstrating **DevSecOps** best practices. This project includes automated CI/CD, security scanning, and comprehensive observability.
+Application Layer: A Spring Boot microservice connected to a MySQL database, fully monitored via Prometheus, Grafana, and the EFK stack.
 
-### Business Use Case
+Technology Stack
+Cloud: AWS (EKS, EC2, VPC, IAM, EBS)
 
-* Product catalog management
-* User authentication & authorization
-* Shopping cart and order processing
+IaC: Terraform
 
----
+CI/CD: Jenkins (Pipeline-as-Code)
 
-## 🏗️ Architecture
+Security & Quality: SonarQube (Static Analysis), Trivy (Container Scanning)
 
-### High-Level Architecture
+Artifact Management: Sonatype Nexus
 
-### CI/CD Pipeline Flow
+Orchestration: Kubernetes (kubectl, Helm)
 
-**Code snippet**
+Backend: Java 8, Spring Boot, Hibernate
 
-```
-graph LR
-    GitHub -- Trigger --> Jenkins
-    Jenkins --> Build
-    Build --> Test
-    Test --> Sonar[SonarQube Scan]
-    Sonar --> OWASP[OWASP Scan]
-    OWASP --> DockerBuild[Docker Build]
-    DockerBuild --> Trivy[Trivy Image Scan]
-    Trivy --> Push[Push to Docker Hub]
-    Push --> Deploy[Deploy to K8s]
-    Deploy --> Health[Health Check]
-```
+Database: MySQL 8.0
 
----
+Observability: Prometheus, Grafana (Monitoring), Elasticsearch, Fluentd, Kibana (Logging)
 
-## 🚀 Quick Start
 
-### 1. Clone Repository
-
-**Bash**
-
-```
-git clone https://github.com/rknikhade1419/E-commerce.git
-cd E-commerce
-```
-
-### 2. Local Development (Docker Compose)
-
-**Bash**
-
-```
-docker-compose up -d
-curl http://localhost:8080/api/products
-```
-
----
-
-## 📖 Detailed Setup Guide
-
-### Step 1: Build and Push Docker Image
-
-**Bash**
-
-```
-# Move to the backend source directory
-cd ecommerce-app/Backend
-mvn clean package -DskipTests
-docker build -t rknikhade1419/ecommerce-backend:1.0 .
-docker push rknikhade1419/ecommerce-backend:1.0
-```
-
-### Step 2: Deploy Database
-
-**Bash**
-
-```
-kubectl create namespace ecommerce
-
-# Create Secret (Replace placeholders with your passwords)
-kubectl create secret generic mysql-secret \
-  --from-literal=root-password="REPLACE_WITH_YOUR_ROOT_PASS" \
-  --from-literal=database=ecommerce \
-  --from-literal=user=ecomuser \
-  --from-literal=password="REPLACE_WITH_YOUR_APP_PASS" \
-  -n ecommerce
-
-# Apply manifests from the renamed k8s folder
-kubectl apply -f k8s/mysql/
-```
-
----
-
-## 📁 Project Structure
+Project Structure
 
 **Plaintext**
 
@@ -129,16 +50,66 @@ E-commerce/
 
 ---
 
-## 👨‍💻 Author
+
+Deployment Steps
+1. Provision the Tools Server
+Navigate to the Tools directory and apply the Terraform configuration.
+
+Bash
+terraform init
+terraform apply --auto-approve
+2. Provision the EKS Cluster
+Deploy the network and the Kubernetes cluster.
+
+Bash
+terraform init
+terraform apply --auto-approve
+aws eks update-kubeconfig --name ecommerce-cluster --region us-east-1
+3. Setup Observability
+Install the monitoring stack using Helm and apply custom dashboards/alerts.
+
+Bash
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+kubectl apply -f k8s/monitoring/
+4. Execute CI/CD Pipeline
+Connect your Jenkins instance to the Application Repository. The pipeline performs:
+
+Unit Testing: Maven Test
+
+Static Code Analysis: SonarQube Scan
+
+Package: Maven Build (JAR)
+
+Security: Trivy Image Scan
+
+Push: Docker Hub Registry
+
+Deploy: Kubernetes (EKS) Rolling Update
+
+Monitoring & Alerts
+The platform includes custom Prometheus alerting rules for:
+
+PodDown: Critical alert if an application pod fails.
+
+HighResponseTime: Warning if p95 latency exceeds 2 seconds.
+
+DatabaseConnectionLow: Critical alert if the backend loses DB connectivity.
+
+Security Best Practices (DevSecOps)
+Multi-Stage Docker Builds: Minimizes the attack surface of the final image.
+
+Non-Root Execution: Application runs as a restricted user within the container.
+
+Secret Management: Sensitive DB credentials are never hardcoded; managed via K8s Secrets.
+
+Init Containers: Ensures the application only starts when the database is verified as "Ready."
+
+
+
+Author
 
 **Roshan Nikhade**
 
 * **GitHub:** [@rknikhade1419](https://www.google.com/search?q=https://github.com/rknikhade1419)
 * **LinkedIn:** [Roshan Nikhade](https://www.google.com/search?q=https://linkedin.com/in/roshan-nikhade-5b9577381)
 * **Email:** nikhaderoshankumar@gmail.com
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
