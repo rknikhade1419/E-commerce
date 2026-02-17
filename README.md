@@ -105,3 +105,17 @@ Init Containers: Ensures the application only starts when the database is verifi
 * **LinkedIn:** [Roshan Nikhade](https://www.google.com/search?q=https://linkedin.com/in/roshan-nikhade-5b9577381)
 * **Email:** nikhaderoshankumar@gmail.com
 
+
+
+
+🛒 E-Commerce DevSecOps Platform
+This project is a production-grade, end-to-end DevSecOps implementation for a Java-based E-commerce platform. It leverages Infrastructure as Code (IaC), Automated CI/CD Pipelines, and a robust Observability Stack (Monitoring & Logging) deployed on Amazon EKS.
+
+🏗️ Architecture Overview
+The system is split into three distinct layers:
+
+Tools Infrastructure: A dedicated EC2 environment running Jenkins, SonarQube, and Nexus.
+
+Cloud Infrastructure: A highly available AWS EKS cluster with managed node groups across multiple AZs.
+
+Application Layer: A Spring Boot microservice connected to a MySQL database, fully monitored via Prometheus, Grafana, and the EFK stack.
