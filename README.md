@@ -29,6 +29,7 @@ Observability: Prometheus, Grafana, EFK Stack (Elasticsearch, Fluentd, Kibana)
 
 📁 Project Structure
 Plaintext
+
 E-commerce/
 ├── Docker/             # Docker configuration (Local testing)
 ├── ecommerce-app/      # Application Source
@@ -39,6 +40,8 @@ E-commerce/
 │   ├── monitoring/     # Prometheus & Grafana Configs
 │   └── mysql/          # Database Deployment & PVC
 └── Scripts/            # Automation & Utility Scripts
+
+
 🚀 Deployment Steps
 1. Provision the Tools Server
 Navigate to the Tools directory and apply the Terraform configuration.
