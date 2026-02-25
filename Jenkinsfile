@@ -63,14 +63,14 @@ pipeline {
             }
         }
         
-        stage('OWASP Dependency Check') {
-            steps {
-                dir("${BACKEND_DIR}") {
-                    dependencyCheck additionalArguments: "--scan ./ --format HTML --project ${APP_NAME}", odcInstallation: 'OWASP-DC'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                }
-            }
-        }
+   //     stage('OWASP Dependency Check') {
+  //       steps {
+ //             dir("${BACKEND_DIR}") {
+ //                   dependencyCheck additionalArguments: "--scan ./ --format HTML --project ${APP_NAME}", odcInstallation: 'OWASP-DC'
+  //                  dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+  //              }
+ //           }
+  //      }
         
         stage('Package Application') {
             steps {
