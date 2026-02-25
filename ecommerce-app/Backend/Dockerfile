@@ -11,7 +11,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
 # Using alpine for the smallest footprint (standard for DevSecOps)
-FROM openjdk:8-jre-alpine
+FROM maven:3.8.6-eclipse-temurin-17 AS build
 LABEL author="Roshan Nikhade"
 LABEL project="E-commerce DevSecOps"
 
