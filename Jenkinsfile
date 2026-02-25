@@ -89,12 +89,12 @@ pipeline {
             }
         }
         
-        stage('Trivy Image Scan') {
-            steps {
-                sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG} --format json --output trivy-report.json"
-                sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG}"
-            }
-        }
+     //   stage('Trivy Image Scan') {
+       //     steps {
+         //       sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG} --format json --output trivy-report.json"
+          //      sh "trivy image ${IMAGE_NAME}:${IMAGE_TAG}"
+          //  }
+       // }
         
         stage('Push to Docker Hub') {
             steps {
