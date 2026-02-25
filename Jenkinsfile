@@ -152,5 +152,4 @@ pipeline {
             archiveArtifacts artifacts: '**/target/*.jar, **/trivy-report.json', allowEmptyArchive: true
             cleanWs()
         }
-    }
-
+     }
