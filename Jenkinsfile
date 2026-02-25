@@ -51,7 +51,7 @@ pipeline {
                 always { junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
         } }
             }
-        }
+        
         
         stage('SonarQube Analysis') {
             steps {
