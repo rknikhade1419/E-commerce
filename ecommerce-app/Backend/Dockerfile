@@ -2,6 +2,10 @@
 FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
+# Stage 1: Build
+FROM maven:3.8.6-eclipse-temurin-17 AS build
+WORKDIR /app
+
 # Optimization: Only download dependencies if pom.xml changes
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -11,7 +15,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime
 # Using alpine for the smallest footprint (standard for DevSecOps)
-FROM maven:3.8.6-eclipse-temurin-17 AS build
+FROM eclipse-temurin:17-jre-alpine
 LABEL author="Roshan Nikhade"
 LABEL project="E-commerce DevSecOps"
 
